@@ -72,6 +72,7 @@ public class AuthController {
 		NService.sendRegistrationNotification(user);
 		
 		return new ResponseEntity<StandardResponse>(new StandardResponse(true, "sent"), HttpStatus.OK);
+		//if (response.late == "")
 	}
 
 	
