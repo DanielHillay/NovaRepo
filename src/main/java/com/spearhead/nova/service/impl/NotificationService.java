@@ -8,6 +8,8 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.MailException;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,7 @@ import org.thymeleaf.context.Context;
 import org.thymeleaf.context.IExpressionContext;
 import org.thymeleaf.linkbuilder.ILinkBuilder;
 
+import com.spearhead.nova.model.Support;
 import com.spearhead.nova.model.User;
 
 
@@ -25,6 +28,8 @@ public class NotificationService {
 	private JavaMailSender javaMailSender;
 
 	private TemplateEngine templateEngine;
+	
+	String adminMail = "lanre.bolaji007@gmail.com";
 
 	
     @Value("${spring.mail.username}")
@@ -76,6 +81,17 @@ public class NotificationService {
 			
 			System.out.println(e.getMessage());
 		}
+	}
+	
+	
+	public void sendSupportNotification(Support support) throws MailException {
+		
+		SimpleMailMessage mail = new SimpleMailMessage();
+		mail.setTo(support.getEmail());
+		mail.setSubject(support.getSupportSubject());
+		mail.setText(support.getSupportText());
+		
+		javaMailSender.send(mail);
 	}
 
 

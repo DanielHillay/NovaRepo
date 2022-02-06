@@ -11,7 +11,7 @@ public class NovaApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(NovaApplication.class, args);
 	}
-
+	
 	//Created a bean that can be used in all the application optimizing spring boot memory
 	@Bean
 	public RestTemplate restTemplate() {

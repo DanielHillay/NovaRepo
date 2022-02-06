@@ -26,6 +26,19 @@ public class AuditLogs extends DateAudit {
 	
 	private Integer user_id;
 	
+	private String userName;
+	
+	
+	
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+
 	@Column(name="action", length=512, nullable = false)
 	private String action;
 	
@@ -35,14 +48,17 @@ public class AuditLogs extends DateAudit {
 		super();
 	}
 	
-	public AuditLogs(Long autologId, Integer user_id, String action, String status) {
-		super();
+
 	
+	public AuditLogs(Long autologId, Integer user_id, String userName, String action, String status) {
+		super();
+		this.autologId = autologId;
 		this.user_id = user_id;
+		this.userName = userName;
 		this.action = action;
 		this.status = status;
 	}
-	
+
 	public Long getAutologId() {
 		return autologId;
 	}
@@ -67,11 +83,13 @@ public class AuditLogs extends DateAudit {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	
 
 	@Override
 	public String toString() {
-		return "AuditLogs [autologId=" + autologId + ", user_id=" + user_id + ", action=" + action + ", status="
-				+ status + "]";
+		return "AuditLogs [autologId=" + autologId + ", user_id=" + user_id + ", userName=" + userName + ", action="
+				+ action + ", status=" + status + "]";
 	}
+	
+
+
 }

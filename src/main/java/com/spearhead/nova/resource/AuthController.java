@@ -63,6 +63,13 @@ public class AuthController {
 
 		return authService.registerUser(user);
 	}
+	
+	@PostMapping(value = "/admin/registeradmin",  consumes="application/json", produces = "application/json")
+	public ResponseEntity<StandardResponse> registerAdmin(@RequestBody User user) throws IllegalArgumentException {
+
+		return authService.registerUser(user);
+	}
+
 
 
 	
@@ -72,7 +79,6 @@ public class AuthController {
 		NService.sendRegistrationNotification(user);
 		
 		return new ResponseEntity<StandardResponse>(new StandardResponse(true, "sent"), HttpStatus.OK);
-		//if (response.late == "")
 	}
 
 	

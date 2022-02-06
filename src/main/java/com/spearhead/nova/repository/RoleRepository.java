@@ -12,5 +12,5 @@ import com.spearhead.nova.model.RoleName;
 
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Long> {
-    Optional<Role> findByName(RoleName roleName);
+    Role findByName(String roleName);
 }

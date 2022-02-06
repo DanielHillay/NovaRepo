@@ -15,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.spearhead.nova.model.RoleName;
 import com.spearhead.nova.security.CustomUserDetailsService;
 import com.spearhead.nova.security.JwtAuthenticationEntryPoint;
 import com.spearhead.nova.security.JwtAuthenticationFilter;
@@ -73,6 +74,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                     .antMatchers("/js/**", "/css/**", "/images/**").permitAll()
                     .antMatchers("/auth/**").permitAll()
+                    .antMatchers("/auth/admin/**").permitAll()
                     .antMatchers("/documentations").permitAll()
                     .antMatchers("/error").permitAll()
                     .antMatchers("/v2/api-docs").permitAll()

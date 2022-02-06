@@ -1,6 +1,7 @@
 package com.spearhead.nova.service;
 
-import java.time.LocalDateTime;
+//import java.time.LocalDateTime;
+//import java.time.LocalDateTime;
 //import java.util.Date;
 import java.util.List;
 
@@ -17,7 +18,9 @@ public interface AuditlogService {
 	public AuditLogs saveAuditlog(AuditLogs auditlogs);
 	public List<AuditLogs> fetchAuditlogList();
 	//public List<AuditLogs> getAllBetweenDates(Date startDate, Date endDate);
-	public List<AuditLogs> getAllBetweenDates(LocalDateTime startDate, LocalDateTime endDate);
+	
+	List<AuditLogs> getAllBetweenDates(String startDate, String endDate);
+	public List<AuditLogs> getAllBetweenDatesById(String startDate, String endDate, Integer userid);
 	
 
 	

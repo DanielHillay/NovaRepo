@@ -20,9 +20,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.spearhead.nova.model.AuditLogs;
+import com.spearhead.nova.model.Role;
 import com.spearhead.nova.model.StandardResponse;
 import com.spearhead.nova.model.User;
 import com.spearhead.nova.model.endpoint.SignOn;
+import com.spearhead.nova.repository.AuditlogRepository;
+import com.spearhead.nova.repository.RoleRepository;
 import com.spearhead.nova.repository.UserRepository;
 import com.spearhead.nova.security.JwtTokenProvider;
 import com.spearhead.nova.service.impl.NotificationService;
@@ -49,7 +53,13 @@ public class AuthService {
     UserRepository userRepository;
     
     @Autowired
+    RoleRepository roleRepository;
+    
+    @Autowired
     JwtTokenProvider tokenProvider;
+    
+    @Autowired
+	private AuditlogRepository auditlogRepo;
     
   //  private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
     
@@ -66,6 +76,8 @@ public class AuthService {
 				Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(),user.getPassword()));
 			if (authentication.isAuthenticated()) {
 				
+				
+				
 				HttpHeaders responseHeaders = new HttpHeaders();
 				String email = user.getUsername() ;
 	
@@ -79,18 +91,26 @@ public class AuthService {
 				jsonObject.put("token", jwt);
 				
 				responseHeaders.set("x-auth-token", jwt);
-	    
+				
+				AuditLogs auditlog = new AuditLogs();
+				//auditlog.setAutologId(null);
+				auditlog.setAction("Logged In");
+				auditlog.setUserName(email);
+				auditlogRepo.save(auditlog);
 	    
 				return new ResponseEntity<String>(MethodUtils.prepareResponseJSON(HttpStatus.OK, jsonObject.toString()), responseHeaders, HttpStatus.OK);
 	
 				}
 			} 
 			catch (BadCredentialsException e) {
+				System.out.println("Hello world 2");
 				return new ResponseEntity<String>(MethodUtils.prepareErrorJSON(HttpStatus.BAD_REQUEST, "Either email or password is incorrect"), HttpStatus.BAD_REQUEST);
 			} catch (JSONException e) {
 				try {
+					System.out.println("Hello world 3");
 					jsonObject.put("exception", e.getMessage());
 				} catch (JSONException e1) {
+					System.out.println("Hello world 4");
 					e1.printStackTrace();
 				}
 		
@@ -139,5 +159,14 @@ public class AuthService {
 
 		return new ResponseEntity<StandardResponse>(sr, HttpStatus.INTERNAL_SERVER_ERROR);
 	
+	}
+	
+	
+	public void addRoleToUser(String email, String roleName) {
+		Object user = userRepository.findByEmail(email);
+		Role role  = roleRepository.findByName(roleName);
+		
+		((User) user).getRoles().add(role);
+		
 	}
 }
