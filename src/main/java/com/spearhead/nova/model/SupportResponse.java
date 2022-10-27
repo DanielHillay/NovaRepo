@@ -5,8 +5,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
 
 @Entity
 public class SupportResponse extends DateAudit  {
@@ -24,13 +22,13 @@ public class SupportResponse extends DateAudit  {
 	@Column(columnDefinition = "LONGTEXT", nullable = false)
 	private String supportResponseText;
 	
-	@NotNull
+
 	private String customerId;
 	
-	@NotNull
+
 	private String supportResponseSubject;
 	
-	@Email
+
 	private String email;
 
 	private int supportResponsestatus;
@@ -95,8 +93,8 @@ public class SupportResponse extends DateAudit  {
 		super();
 	}
 
-	public SupportResponse(Long supportResponseId, String supportResponseText, @NotNull String customerId,
-			@NotNull String supportResponseSubject, @Email String email, int supportResponsestatus) {
+	public SupportResponse(Long supportResponseId, String supportResponseText,  String customerId,
+			 String supportResponseSubject, String email, int supportResponsestatus) {
 		super();
 		this.supportResponseId = supportResponseId;
 		this.supportResponseText = supportResponseText;
