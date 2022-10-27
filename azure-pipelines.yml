@@ -1,0 +1,55 @@
+# Maven
+# Build your Java project and run tests with Apache Maven.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/java
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: Maven@3
+  inputs:
+    mavenPomFile: 'pom.xml'
+    mavenOptions: '-Xmx3072m'
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: '1.17'
+    jdkArchitectureOption: 'x64'
+    publishJUnitResults: false
+    testResultsFiles: '**/surefire-reports/TEST-*.xml'
+    goals: 'clean package'
+
+- script: ls $(Pipeline.Workspace)/s/target
+
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '/home/vsts/work/1/s/target/*.war'
+    includeRootFolder: true
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    replaceExistingArchive: true
+    
+- task: FtpUpload@2
+  inputs:
+    credentialsOption: 'inputs'
+    serverUrl: 'https://kpi.spearhead-apps.com.ng'
+    username: 'kpimobile@spearhead-apps.com.ng'
+    password: 'kp1m0b1le'
+    rootDirectory: '/home/vsts/work/1/a/'
+    filePatterns: '**.zip'
+    remoteDirectory: '/uploadnovaadmin/'
+    clean: false
+    cleanContents: false
+    preservePaths: false
+    trustSSL: false
+- task: SendGridEmail@2
+  inputs:
+    SendGridApiKey: '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'
+    FromAddress: 'evansa@demandinc.ng'
+    ToAddresses: 'ralekeo@spearheadconsult.com,tolulopea@spearheadconsult.com,goodnesse@spearheadconsult.com,oladoyina@spearheadconsult.com,danieli@spearheadconsult.com'
+    Subject: 'NOVA Admin API Build $(Build.BuildId) Deployment'
+    emailBodyFormat: 'InLine'
+    EmailBody: 'The NOVA Admin API code was successfully built. Kindly find attached the link to download the jar file. https://kpi.spearhead-apps.com.ng/uploadnovaadmin/$(Build.BuildId).zip' 
+    SendAsHTML: true
