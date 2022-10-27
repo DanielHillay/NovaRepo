@@ -1,6 +1,7 @@
 package com.spearhead.nova.resource;
 
 
+import com.spearhead.nova.model.AdminUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -65,9 +66,9 @@ public class AuthController {
 	}
 	
 	@PostMapping(value = "/admin/registeradmin",  consumes="application/json", produces = "application/json")
-	public ResponseEntity<StandardResponse> registerAdmin(@RequestBody User user) throws IllegalArgumentException {
+	public ResponseEntity<StandardResponse> registerAdmin(@RequestBody AdminUser user) throws IllegalArgumentException {
 
-		return authService.registerUser(user);
+		return authService.registerAdmin(user);
 	}
 
 

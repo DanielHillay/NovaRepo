@@ -3,6 +3,9 @@ package com.spearhead.nova.service;
 
 import javax.transaction.Transactional;
 
+import com.spearhead.nova.model.*;
+import com.spearhead.nova.repository.AdminRepository;
+import com.spearhead.nova.service.impl.SendGridEmailService;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 /* import org.slf4j.Logger;
@@ -20,10 +23,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.spearhead.nova.model.AuditLogs;
-import com.spearhead.nova.model.Role;
-import com.spearhead.nova.model.StandardResponse;
-import com.spearhead.nova.model.User;
 import com.spearhead.nova.model.endpoint.SignOn;
 import com.spearhead.nova.repository.AuditlogRepository;
 import com.spearhead.nova.repository.RoleRepository;
@@ -57,6 +56,12 @@ public class AuthService {
     
     @Autowired
     JwtTokenProvider tokenProvider;
+
+	@Autowired
+	SendGridEmailService sendGrid;
+
+	@Autowired
+	AdminRepository adminRepo;
     
     @Autowired
 	private AuditlogRepository auditlogRepo;
@@ -85,7 +90,7 @@ public class AuthService {
 	
 			    String jwt = tokenProvider.generateToken(authentication);
 			    
-			    User loggedInUser = userRepository.findByEmail(email).get();
+			    AdminUser loggedInUser = adminRepo.findByEmail(email).get();
 			    
 			    jsonObject.put("user_details", new JSONObject(loggedInUser.toString()));
 				jsonObject.put("token", jwt);
@@ -136,7 +141,8 @@ public class AuthService {
 			String password = passwordEncoder.encode(user.getPassword());
 			user.setPassword(password);
 			userRepository.save(user);
-			NService.sendRegistrationNotification(user);
+			//NService.sendRegistrationNotification(user);
+			sendGrid.sendGridNotification(user);
 		
 			
 			sr.setStatus(true);
@@ -159,6 +165,44 @@ public class AuthService {
 
 		return new ResponseEntity<StandardResponse>(sr, HttpStatus.INTERNAL_SERVER_ERROR);
 	
+	}
+	public ResponseEntity<StandardResponse> registerAdmin(AdminUser user){
+
+
+		StandardResponse sr = new StandardResponse();
+
+		try {
+			Boolean loggedInUser = adminRepo.findByEmail(user.getEmail()).isPresent();
+
+			if (!loggedInUser) {
+				String password = passwordEncoder.encode(user.getPassword());
+				user.setPassword(password);
+				//userRepository.save(user);
+				adminRepo.save(user);
+				//NService.sendRegistrationNotification(user);
+				//sendGrid.sendGridNotification(user);
+
+
+				sr.setStatus(true);
+				sr.setMessage("User Registered");
+
+				return new ResponseEntity<StandardResponse>(sr, HttpStatus.OK);
+
+			} else {
+
+				sr.setStatus(false);
+				sr.setMessage("Email Already Exists");
+				return new ResponseEntity<StandardResponse>(sr, HttpStatus.OK);
+			}
+
+		}  catch(Exception ex){
+
+			sr.setStatus(false);
+			sr.setMessage(ex.getMessage());
+		}
+
+		return new ResponseEntity<StandardResponse>(sr, HttpStatus.INTERNAL_SERVER_ERROR);
+
 	}
 	
 	
