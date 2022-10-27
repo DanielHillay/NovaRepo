@@ -103,7 +103,8 @@ public class AuthService {
 				auditlog.setUserName(email);
 				auditlogRepo.save(auditlog);
 	    
-				return new ResponseEntity<String>(MethodUtils.prepareResponseJSON(HttpStatus.OK, jsonObject.toString()), responseHeaders, HttpStatus.OK);
+				return new ResponseEntity<String>(MethodUtils.prepareResponseJSON(HttpStatus.OK, jsonObject.toString()),
+						responseHeaders, HttpStatus.OK);
 	
 				}
 			} 
@@ -119,11 +120,13 @@ public class AuthService {
 					e1.printStackTrace();
 				}
 		
-				return new ResponseEntity<String>(MethodUtils.prepareErrorJSON(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+				return new ResponseEntity<String>(MethodUtils.prepareErrorJSON(HttpStatus.INTERNAL_SERVER_ERROR,
+						e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
 				
 			}
 
-			return new ResponseEntity<String>(MethodUtils.prepareErrorJSON(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong"), HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<String>(MethodUtils.prepareErrorJSON(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong"),
+					HttpStatus.INTERNAL_SERVER_ERROR);
 	
 }
 	
