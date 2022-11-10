@@ -5,6 +5,7 @@ import java.util.List;
 // import java.util.Arrays;
 // import java.util.List;
 
+import com.spearhead.nova.repository.UserRepository;
 import org.json.JSONObject;
 // import org.codehaus.jettison.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,9 @@ public class UserController {
     @Autowired
     // // Using Rest Template to consume external endpoint
     RestTemplate restTemplate;
+
+	@Autowired
+	UserRepository userRepository;
 
     @Autowired
     private UserService userServices;
@@ -73,26 +77,34 @@ public class UserController {
     @GetMapping("/details")
     public ResponseEntity<String> getAllUsers() {
 
-        System.out.println("Hello ");
         // RestTemplate restTemplate = new RestTemplate();
-        String path = "https://bloomerapi.azurewebsites.net/api/getusers";
+        // String path = "https://bloomerapi.azurewebsites.net/api/getusers";
         System.out.println("Hello ");
+		StandardResponse sr = new StandardResponse();
 
         try {
 
-            String allUsers = restTemplate.getForObject(path, String.class);
+            //String allUsers = restTemplate.getForObject(path, String.class);
 
-            JSONObject apiResponse = new JSONObject(allUsers);
-            System.out.println("API " + apiResponse);
-            JSONObject response = apiResponse.getJSONObject("data");// .getJSONObject("data");//.getJSONArray("allUsers");
-            System.out.println("API " + response);
+            //JSONObject apiResponse = new JSONObject(allUsers);
+            //System.out.println("API " + apiResponse);
+           // JSONObject response = apiResponse.getJSONObject("data");// .getJSONObject("data");//.getJSONArray("allUsers");
+           // System.out.println("API " + response);
 
             // ResponseEntity<String> resp = restTemplate.exch(path, HttpMethod.GET, null,
             // null, null );
 
-            // re
-            return ResponseEntity.ok().body(response.toString());
+			List<User> listOfUsers = userRepository.findAll();
 
+			sr.setData(listOfUsers);
+			sr.setMessage("Your list of USERS");
+			sr.setStatus(true);
+			sr.setStatuscode("200");
+
+            // re
+            //return ResponseEntity.ok().body(response.toString());
+
+			return new ResponseEntity<String>(sr.getMessage(), HttpStatus.OK);
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
             return new ResponseEntity<String>(

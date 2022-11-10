@@ -66,7 +66,7 @@ public class AuthService {
     @Autowired
 	private AuditlogRepository auditlogRepo;
     
-  //  private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
+  // private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
     
     
     @Value("${spring.mail.username}")
@@ -78,7 +78,8 @@ public class AuthService {
 		
 		JSONObject jsonObject = new JSONObject();
 		try {
-				Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(),user.getPassword()));
+				Authentication authentication = authenticationManager
+						.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(),user.getPassword()));
 			if (authentication.isAuthenticated()) {
 				
 				

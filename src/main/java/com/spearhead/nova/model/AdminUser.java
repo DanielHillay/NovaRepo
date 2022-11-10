@@ -13,7 +13,7 @@ public class AdminUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Long userId;
     private String email;
     private String firstName;
     private String lastName;
