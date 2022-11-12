@@ -1,5 +1,9 @@
 package com.spearhead.nova.model;
 
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
 public class StandardResponse {
 
     private boolean status;
@@ -11,11 +15,25 @@ public class StandardResponse {
         super();
     }   
 
-    public StandardResponse(boolean isStatus , String message){
+    public StandardResponse(boolean isStatus , String message, Object data, String statuscode){
         
         this.status = isStatus;
         this.message = message;
-        this.data = null;
+        this.data = data;
+        this.statuscode = statuscode;
+    }
+
+    public StandardResponse(boolean isStatus , String message,  String statuscode){
+
+        this.status = isStatus;
+        this.message = message;
+        this.statuscode = statuscode;
+    }
+
+    public StandardResponse(boolean isStatus , String message){
+
+        this.status = isStatus;
+        this.message = message;
     }
 
     public boolean isStatus() {
@@ -43,5 +61,25 @@ public class StandardResponse {
         this.data = data;
     }
 
-    
+    public StandardResponse sendResponse(boolean status, String message, Object data, String statuscode){
+        return new StandardResponse(status, message, data, statuscode);
+    }
+
+    public static ResponseEntity<StandardResponse> sendHttpResponse(boolean status, String message, Object data, String statuscode){
+        StandardResponse sr =  new StandardResponse(status, message, data, statuscode);
+
+        return new ResponseEntity<StandardResponse>(sr, HttpStatus.OK);
+    }
+
+    public static ResponseEntity<StandardResponse> sendHttpResponse(boolean status, String message, String statuscode){
+        StandardResponse sr =  new StandardResponse(status, message, statuscode);
+
+        return new ResponseEntity<StandardResponse>(sr, HttpStatus.OK);
+    }
+
+    public static ResponseEntity<StandardResponse> sendHttpResponse(boolean status, String message){
+        StandardResponse sr =  new StandardResponse(status, message);
+
+        return new ResponseEntity<StandardResponse>(sr, HttpStatus.OK);
+    }
 }

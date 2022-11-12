@@ -175,18 +175,22 @@ public class AuthService {
 
 		StandardResponse sr = new StandardResponse();
 
+		System.out.println("I got here");
 		try {
 			Boolean loggedInUser = adminRepo.findByEmail(user.getEmail()).isPresent();
 
 			if (!loggedInUser) {
 				String password = passwordEncoder.encode(user.getPassword());
 				user.setPassword(password);
+
+				System.out.println("I got here too");
+
 				//userRepository.save(user);
 				adminRepo.save(user);
 				//NService.sendRegistrationNotification(user);
 				//sendGrid.sendGridNotification(user);
 
-
+				sr.setData(user);
 				sr.setStatus(true);
 				sr.setMessage("User Registered");
 

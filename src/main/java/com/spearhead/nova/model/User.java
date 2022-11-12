@@ -178,9 +178,9 @@ public class User extends DateAudit{
 	public void setCustomerId(String customercode) {
 		this.customerId = customercode;
 	}
-	
 
-	
+
+
 
 	@Override
 	public String toString() {
